@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="el">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Βασικά στοιχεία, εφαρμογές και σύγχρονες πρακτικές για τη χρήση δορυφορικών εικόνων SPOT στην τηλεπισκόπηση.">
+  <title>SPOT | Δορυφορική τηλεπισκόπηση</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #172b2b;
+      --muted: #536967;
+      --paper: #f3f5ef;
+      --white: #fffefa;
+      --line: #d7dfd7;
+      --green: #1b6658;
+      --lime: #d9ee82;
+      --orange: #e66d45;
+      --serif: Georgia, "Times New Roman", serif;
+      --sans: "DM Sans", sans-serif;
+      --display: "Space Grotesk", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--sans);
+      line-height: 1.6;
+    }
+    a { color: inherit; }
+    .wrap { width: min(1160px, calc(100% - 48px)); margin-inline: auto; }
+    .topbar {
+      min-height: 78px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 28px;
+      border-bottom: 1px solid var(--line);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      font: 700 18px var(--display);
+      text-decoration: none;
+    }
+    .brand-mark {
+      width: 32px;
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--green);
+      color: var(--lime);
+      font: 700 14px var(--display);
+    }
+    nav { display: flex; gap: 27px; font-size: 13px; color: var(--muted); }
+    nav a { text-decoration: none; }
+    nav a:hover, .source-list a:hover { color: var(--orange); }
+
+    .hero {
+      min-height: 540px;
+      display: grid;
+      grid-template-columns: 1.04fr .96fr;
+      align-items: center;
+      gap: 50px;
+      padding-block: 66px;
+    }
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--green);
+      text-transform: uppercase;
+      font: 700 11px var(--display);
+    }
+    .eyebrow::before { content: ""; width: 25px; height: 2px; background: var(--orange); }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 {
+      max-width: 650px;
+      margin: 18px 0 22px;
+      font: 500 clamp(48px, 6vw, 78px)/.99 var(--display);
+      letter-spacing: 0;
+    }
+    h1 span { color: var(--green); font-family: var(--serif); font-weight: 400; font-style: italic; }
+    .hero-copy > p { max-width: 550px; color: var(--muted); font-size: 17px; }
+    .hero-meta { display: flex; align-items: center; gap: 12px; margin-top: 28px; color: var(--muted); font-size: 12px; }
+    .live-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--orange); }
+    .hero-visual {
+      position: relative;
+      min-height: 390px;
+      background: #214b4c;
+      overflow: hidden;
+      isolation: isolate;
+    }
+    .hero-visual::before {
+      position: absolute;
+      z-index: -1;
+      content: "";
+      inset: 0;
+      background: linear-gradient(180deg, rgba(18,43,43,.02) 20%, rgba(18,43,43,.76)),
+        url("https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=1400&q=85") center/cover;
+      transform: scale(1.02);
+    }
+    .visual-label {
+      position: absolute;
+      right: 18px;
+      top: 18px;
+      padding: 7px 10px;
+      background: var(--lime);
+      color: var(--ink);
+      font: 700 10px var(--display);
+      text-transform: uppercase;
+    }
+    .visual-caption { position: absolute; right: 26px; bottom: 23px; left: 26px; color: white; }
+    .visual-caption strong { display: block; font: 600 22px var(--display); }
+    .visual-caption span { color: rgba(255,255,255,.76); font-size: 12px; }
+    .hero-visual::after {
+      position: absolute;
+      content: "";
+      width: 138px;
+      height: 138px;
+      top: 27%;
+      right: 17%;
+      border: 1px solid rgba(217,238,130,.72);
+      border-radius: 50%;
+      box-shadow: 0 0 0 22px rgba(217,238,130,.08), 0 0 0 46px rgba(217,238,130,.06);
+      pointer-events: none;
+    }
+
+    .spec-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      background: var(--green);
+      color: var(--white);
+    }
+    .spec { padding: 23px 26px; border-right: 1px solid rgba(255,255,255,.2); }
+    .spec:last-child { border: 0; }
+    .spec strong { display: block; color: var(--lime); font: 600 25px var(--display); }
+    .spec span { font-size: 12px; color: rgba(255,255,255,.8); }
+
+    section { padding-block: 83px; }
+    .section-head { display: grid; grid-template-columns: .65fr 1.35fr; gap: 50px; align-items: start; margin-bottom: 38px; }
+    .section-head h2 { margin: 10px 0 0; font: 500 39px/1.12 var(--display); letter-spacing: 0; }
+    .section-head p { max-width: 570px; margin: 18px 0 0; color: var(--muted); }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 58px; }
+    .info-block { border-top: 1px solid var(--line); padding-top: 18px; }
+    .info-block h3 { margin-bottom: 8px; font: 600 18px var(--display); }
+    .info-block p { margin: 0; color: var(--muted); font-size: 14px; }
+    .band { background: var(--white); }
+    .application-grid { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+    .application {
+      min-height: 176px;
+      padding: 22px 24px;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+    .application .number { color: var(--orange); font: 700 11px var(--display); }
+    .application h3 { margin: 18px 0 7px; font: 600 19px var(--display); }
+    .application p { max-width: 300px; margin: 0; color: var(--muted); font-size: 13px; }
+
+    .updates { background: #e6ece3; }
+    .update-list { border-top: 1px solid #c6d2c8; }
+    .update-row { display: grid; grid-template-columns: 150px 1fr; gap: 38px; padding: 22px 0; border-bottom: 1px solid #c6d2c8; }
+    .update-row time { color: var(--green); font: 700 11px var(--display); text-transform: uppercase; }
+    .update-row h3 { margin: 0 0 5px; font: 600 17px var(--display); }
+    .update-row p { max-width: 780px; margin: 0; color: var(--muted); font-size: 14px; }
+    .caveat { margin-top: 28px; padding: 17px 20px; border-left: 3px solid var(--orange); background: rgba(255,254,250,.68); color: var(--muted); font-size: 13px; }
+
+    .sources-layout { display: grid; grid-template-columns: .75fr 1.25fr; gap: 50px; }
+    .sources-layout h2 { margin: 10px 0 0; font: 500 35px/1.1 var(--display); }
+    .source-list { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--line); }
+    .source-list li { padding: 12px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
+    .source-list a { text-decoration-thickness: 1px; text-underline-offset: 4px; }
+    footer { padding-block: 22px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; }
+    .footer-inner { display: flex; justify-content: space-between; gap: 20px; }
+    .signature { color: var(--ink); font: 600 14px var(--serif); }
+
+    @media (max-width: 760px) {
+      .wrap { width: min(100% - 32px, 560px); }
+      .topbar { min-height: 68px; }
+      nav { gap: 14px; font-size: 11px; }
+      nav a:nth-child(2) { display: none; }
+      .hero { min-height: auto; grid-template-columns: 1fr; gap: 32px; padding-block: 49px; }
+      h1 { font-size: clamp(48px, 13vw, 68px); }
+      .hero-visual { min-height: 310px; }
+      .spec-strip { grid-template-columns: 1fr 1fr; }
+      .spec:nth-child(2) { border-right: 0; }
+      .spec:nth-child(-n+2) { border-bottom: 1px solid rgba(255,255,255,.2); }
+      section { padding-block: 58px; }
+      .section-head, .two-col, .sources-layout { grid-template-columns: 1fr; gap: 24px; }
+      .section-head h2 { font-size: 33px; }
+      .section-head p { margin-top: 0; }
+      .application-grid { grid-template-columns: 1fr 1fr; }
+      .application { min-height: 190px; padding: 17px; }
+      .update-row { grid-template-columns: 1fr; gap: 7px; }
+      .footer-inner { align-items: flex-start; flex-direction: column; gap: 5px; }
+    }
+    @media (max-width: 420px) {
+      nav { gap: 10px; }
+      nav a { font-size: 10px; }
+      .application-grid { grid-template-columns: 1fr; }
+      .application { min-height: 0; }
+      .spec { padding: 18px 16px; }
+      .spec strong { font-size: 22px; }
+    }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  </style>
+</head>
+<body>
+  <header class="wrap topbar">
+    <a class="brand" href="#top" aria-label="SPOT, αρχή σελίδας"><span class="brand-mark">S</span> SPOT / REMOTE SENSING</a>
+    <nav aria-label="Κύρια πλοήγηση">
+      <a href="#basics">Βασικά</a>
+      <a href="#applications">Εφαρμογές</a>
+      <a href="#updates">Εξελίξεις</a>
+      <a href="#sources">Πηγές</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <div class="wrap hero">
+      <div class="hero-copy">
+        <div class="eyebrow">Παρατήρηση της Γης · Τηλεπισκόπηση</div>
+        <h1>Η Γη, σε <span>καθαρή</span> εικόνα.</h1>
+        <p>Οι δορυφόροι SPOT προσφέρουν λεπτομερή οπτική καταγραφή της επιφάνειας της Γης. Στην τηλεπισκόπηση, οι εικόνες τους υποστηρίζουν τη χαρτογράφηση, την παρακολούθηση αλλαγών και τη λήψη τεκμηριωμένων αποφάσεων.</p>
+        <div class="hero-meta"><span class="live-dot" aria-hidden="true"></span> Ενημερωτικό σημείωμα · 19 Οκτωβρίου 2026</div>
+      </div>
+      <div class="hero-visual" role="img" aria-label="Η Γη από το διάστημα">
+        <span class="visual-label">Earth observation</span>
+        <div class="visual-caption"><strong>SPOT 6 / SPOT 7</strong><span>Υψηλή ανάλυση · ευρεία κάλυψη · επαναληπτική παρατήρηση</span></div>
+      </div>
+    </div>
+
+    <div class="wrap spec-strip" aria-label="Ενδεικτικά χαρακτηριστικά SPOT 6 και SPOT 7">
+      <div class="spec"><strong>1,5 m</strong><span>Παγχρωματική ανάλυση</span></div>
+      <div class="spec"><strong>6 m</strong><span>Πολυφασματική ανάλυση</span></div>
+      <div class="spec"><strong>60 km</strong><span>Πλάτος λωρίδας λήψης</span></div>
+      <div class="spec"><strong>Έως καθημερινά</strong><span>Δυνατότητα επανεπίσκεψης</span></div>
+    </div>
+
+    <section class="wrap" id="basics">
+      <div class="section-head">
+        <div><div class="eyebrow">01 / Τα βασικά</div><h2>Τι είναι οι εικόνες SPOT;</h2></div>
+        <p>Το SPOT (Satellite Pour l’Observation de la Terre) είναι σειρά γαλλικών δορυφόρων παρατήρησης της Γης. Οι SPOT 6 και SPOT 7, που εκτοξεύτηκαν το 2012 και το 2014, σχεδιάστηκαν για συστηματική λήψη εικόνων υψηλής ανάλυσης σε μεγάλες εκτάσεις.</p>
+      </div>
+      <div class="two-col">
+        <article class="info-block"><h3>Πώς διαβάζουμε τα δεδομένα</h3><p>Η παγχρωματική ζώνη καταγράφει λεπτομέρεια σε μία ευρεία περιοχή του ορατού φάσματος. Οι πολυφασματικές ζώνες (μπλε, πράσινη, κόκκινη και εγγύς υπέρυθρη) βοηθούν στη διάκριση υλικών, βλάστησης και επιφανειακών χαρακτηριστικών. Ο συνδυασμός τους μπορεί να δώσει έγχρωμη εικόνα υψηλότερης χωρικής λεπτομέρειας.</p></article>
+        <article class="info-block"><h3>Τι σημαίνει «ανάλυση»</h3><p>Το μέγεθος εικονοστοιχείου δεν ισούται με την ακρίβεια θέσης ούτε εγγυάται ότι κάθε αντικείμενο αναγνωρίζεται. Η ορατότητα επηρεάζεται από νέφη, σκιάσεις, γωνία λήψης, ατμόσφαιρα και προεπεξεργασία. Για σύγκριση εικόνων απαιτείται κοινό σύστημα αναφοράς και κατάλληλη διόρθωση.</p></article>
+      </div>
+    </section>
+
+    <section class="band" id="applications">
+      <div class="wrap">
+        <div class="section-head">
+          <div><div class="eyebrow">02 / Στην πράξη</div><h2>Από την εικόνα στην πληροφορία.</h2></div>
+          <p>Η χωρική λεπτομέρεια των SPOT είναι χρήσιμη όταν χρειάζεται να παρατηρήσουμε όρια, μοτίβα και αλλαγές σε κλίμακα τοπίου ή πόλης.</p>
+        </div>
+        <div class="application-grid">
+          <article class="application"><span class="number">01</span><h3>Χρήσεις γης</h3><p>Χαρτογράφηση αστικών περιοχών, αγροτεμαχίων και μεταβολών στην κάλυψη γης.</p></article>
+          <article class="application"><span class="number">02</span><h3>Γεωργία</h3><p>Παρακολούθηση αγρών και κατάστασης βλάστησης, σε συνδυασμό με επιτόπιες μετρήσεις.</p></article>
+          <article class="application"><span class="number">03</span><h3>Δάση & οικοσυστήματα</h3><p>Εντοπισμός αποψίλωσης, κατακερματισμού και μεταβολών σε φυσικές εκτάσεις.</p></article>
+          <article class="application"><span class="number">04</span><h3>Πόλεις & υποδομές</h3><p>Αποτύπωση επέκτασης οικισμών, δικτύων και τεχνητών επιφανειών.</p></article>
+          <article class="application"><span class="number">05</span><h3>Κίνδυνοι & καταστροφές</h3><p>Σύγκριση πριν και μετά από πλημμύρες, πυρκαγιές ή άλλες ταχείες μεταβολές.</p></article>
+          <article class="application"><span class="number">06</span><h3>Χαρτογραφία</h3><p>Ενημέρωση χαρτογραφικών υποβάθρων και λεπτομερών θεματικών χαρτών.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="updates" id="updates">
+      <div class="wrap">
+        <div class="section-head">
+          <div><div class="eyebrow">03 / Σύγχρονες εξελίξεις</div><h2>Η εικόνα σήμερα.</h2></div>
+          <p>Η αξία των SPOT πλέον βρίσκεται συχνά στη σύνδεσή τους με μεγαλύτερες χρονοσειρές και σύγχρονα εργαλεία ανάλυσης, όχι σε μία μεμονωμένη λήψη.</p>
+        </div>
+        <div class="update-list">
+          <article class="update-row"><time>Διαλειτουργικότητα</time><div><h3>Συνδυασμός με Sentinel και Landsat</h3><p>Οι εικόνες υψηλής χωρικής λεπτομέρειας μπορούν να συμπληρώσουν τις συχνότερες και ευρύτερα διαθέσιμες παρατηρήσεις των Sentinel-2 και Landsat. Έτσι, η λεπτομερής χαρτογράφηση μπορεί να συνδυαστεί με συστηματική παρακολούθηση στον χρόνο.</p></div></article>
+          <article class="update-row"><time>Ανάλυση δεδομένων</time><div><h3>Υπολογιστικά νέφη και τεχνητή νοημοσύνη</h3><p>Ροές εργασίας σε GIS και υπολογιστικά περιβάλλοντα νέφους διευκολύνουν την επεξεργασία μεγάλων αρχείων. Μοντέλα μηχανικής μάθησης χρησιμοποιούνται για ταξινόμηση κάλυψης γης και ανίχνευση αλλαγών, με ανάγκη ελέγχου από ειδικό και δεδομένα αναφοράς.</p></div></article>
+          <article class="update-row"><time>Πρόσβαση</time><div><h3>Αρχειακές εικόνες και νέες συλλήψεις</h3><p>Η πρόσβαση σε προϊόντα και αρχεία SPOT παρέχεται μέσω εμπορικών καταλόγων, όπως το Airbus OneAtlas, με όρους που εξαρτώνται από την περιοχή, την ημερομηνία και την άδεια χρήσης. Η ύπαρξη αρχειακών εικόνων δεν επιβεβαιώνει από μόνη της ότι διατίθενται νέες λήψεις από τον δορυφόρο.</p></div></article>
+        </div>
+        <aside class="caveat"><strong>Σημείωση επικαιρότητας:</strong> Τα τεχνικά στοιχεία εδώ είναι συνοπτικά χαρακτηριστικά των SPOT 6/7. Για επιχειρησιακή χρήση, επιβεβαιώστε στον τρέχοντα κατάλογο του παρόχου τη διαθεσιμότητα, την ημερομηνία λήψης, την ανάλυση προϊόντος, την ποιότητα και τους όρους αδειοδότησης.</aside>
+      </div>
+    </section>
+
+    <section class="wrap" id="sources">
+      <div class="sources-layout">
+        <div><div class="eyebrow">04 / Για συνέχεια</div><h2>Πηγές & περαιτέρω ανάγνωση</h2></div>
+        <ul class="source-list">
+          <li><a href="https://www.airbus.com/en/products-services/space/earth-observation" target="_blank" rel="noopener noreferrer">Airbus Earth Observation</a> · προϊόντα και υπηρεσίες δορυφορικής παρατήρησης.</li>
+          <li><a href="https://oneatlas.airbus.com/" target="_blank" rel="noopener noreferrer">Airbus OneAtlas</a> · κατάλογος και υπηρεσίες δορυφορικών εικόνων.</li>
+          <li><a href="https://www.esa.int/Applications/Observing_the_Earth/Copernicus/Sentinel-2" target="_blank" rel="noopener noreferrer">ESA Sentinel-2</a> · χαρακτηριστικά και πολυφασματική παρατήρηση.</li>
+          <li><a href="https://www.usgs.gov/landsat-missions" target="_blank" rel="noopener noreferrer">USGS Landsat Missions</a> · αποστολές και δεδομένα Landsat.</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap footer-inner"><span>Σύντομος οδηγός τηλεπισκόπησης · Ενημερώθηκε 19.10.2026</span><span class="signature">Με εκτίμηση, Κωνσταντίνος</span></div>
+  </footer>
+</body>
+</html>
