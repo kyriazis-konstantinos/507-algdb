@@ -171,6 +171,12 @@
     .update-row time { color: var(--green); font: 700 11px var(--display); text-transform: uppercase; }
     .update-row h3 { margin: 0 0 5px; font: 600 17px var(--display); }
     .update-row p { max-width: 780px; margin: 0; color: var(--muted); font-size: 14px; }
+    .comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: #c6d2c8; border: 1px solid #c6d2c8; margin-bottom: 34px; }
+    .comparison article { padding: 22px 24px; background: var(--white); }
+    .comparison h3 { margin: 0 0 12px; color: var(--green); font: 600 21px var(--display); }
+    .comparison p { margin: 0 0 10px; color: var(--muted); font-size: 13px; }
+    .comparison p:last-child { margin-bottom: 0; }
+    .comparison strong { color: var(--ink); }
     .caveat { margin-top: 28px; padding: 17px 20px; border-left: 3px solid var(--orange); background: rgba(255,254,250,.68); color: var(--muted); font-size: 13px; }
 
     .sources-layout { display: grid; grid-template-columns: .75fr 1.25fr; gap: 50px; }
@@ -199,6 +205,7 @@
       .section-head p { margin-top: 0; }
       .application-grid { grid-template-columns: 1fr 1fr; }
       .application { min-height: 190px; padding: 17px; }
+      .comparison { grid-template-columns: 1fr; }
       .update-row { grid-template-columns: 1fr; gap: 7px; }
       .footer-inner { align-items: flex-start; flex-direction: column; gap: 5px; }
     }
@@ -279,8 +286,22 @@
           <div><div class="eyebrow">03 / Σύγχρονες εξελίξεις</div><h2>Η εικόνα σήμερα.</h2></div>
           <p>Η αξία των SPOT πλέον βρίσκεται συχνά στη σύνδεσή τους με μεγαλύτερες χρονοσειρές και σύγχρονα εργαλεία ανάλυσης, όχι σε μία μεμονωμένη λήψη.</p>
         </div>
+        <div class="comparison" aria-label="Σύγκριση Sentinel-2 και Landsat">
+          <article>
+            <h3>Sentinel-2</h3>
+            <p><strong>Λεπτομέρεια:</strong> εικονοστοιχεία 10 m στις βασικές ορατές και υπέρυθρες ζώνες· 20 m σε ζώνες χρήσιμες για βλάστηση και υγρασία.</p>
+            <p><strong>Πόσο συχνά:</strong> περίπου κάθε 5 ημέρες, όταν συνδυάζονται οι διαθέσιμοι δορυφόροι. Τα σύννεφα μπορεί να καθυστερήσουν μια καθαρή εικόνα.</p>
+            <p><strong>Τι το ξεχωρίζει:</strong> λεπτομερής παρακολούθηση βλάστησης και αγρών, με δωρεάν και ανοικτή πρόσβαση στα δεδομένα.</p>
+          </article>
+          <article>
+            <h3>Landsat</h3>
+            <p><strong>Λεπτομέρεια:</strong> συνήθως 30 m στις πολυφασματικές εικόνες. Παρέχει επίσης θερμικές μετρήσεις, με μικρότερη χωρική λεπτομέρεια.</p>
+            <p><strong>Πόσο συχνά:</strong> περίπου κάθε 8 ημέρες με συνδυασμό των διαθέσιμων δορυφόρων. Και εδώ, τα σύννεφα επηρεάζουν τις χρήσιμες λήψεις.</p>
+            <p><strong>Τι το ξεχωρίζει:</strong> οι θερμικές πληροφορίες βοηθούν στη μελέτη θερμοκρασίας επιφάνειας, με δωρεάν και ανοικτή πρόσβαση στα δεδομένα.</p>
+          </article>
+        </div>
         <div class="update-list">
-          <article class="update-row"><time>Διαλειτουργικότητα</time><div><h3>Συνδυασμός με Sentinel και Landsat</h3><p>Οι εικόνες υψηλής χωρικής λεπτομέρειας μπορούν να συμπληρώσουν τις συχνότερες και ευρύτερα διαθέσιμες παρατηρήσεις των Sentinel-2 και Landsat. Έτσι, η λεπτομερής χαρτογράφηση μπορεί να συνδυαστεί με συστηματική παρακολούθηση στον χρόνο.</p></div></article>
+          <article class="update-row"><time>Διαλειτουργικότητα</time><div><h3>Συνδυασμός SPOT, Sentinel και Landsat</h3><p>Το SPOT μπορεί να προσφέρει λεπτομερέστερη εικόνα, ενώ τα Sentinel-2 και Landsat βοηθούν στην τακτική παρακολούθηση. Ο συνδυασμός τους δίνει πληρέστερη εικόνα, αρκεί οι λήψεις να διορθωθούν και να συγκριθούν με προσοχή.</p></div></article>
           <article class="update-row"><time>Ανάλυση δεδομένων</time><div><h3>Υπολογιστικά νέφη και τεχνητή νοημοσύνη</h3><p>Ροές εργασίας σε GIS και υπολογιστικά περιβάλλοντα νέφους διευκολύνουν την επεξεργασία μεγάλων αρχείων. Μοντέλα μηχανικής μάθησης χρησιμοποιούνται για ταξινόμηση κάλυψης γης και ανίχνευση αλλαγών, με ανάγκη ελέγχου από ειδικό και δεδομένα αναφοράς.</p></div></article>
           <article class="update-row"><time>Πρόσβαση</time><div><h3>Αρχειακές εικόνες και νέες συλλήψεις</h3><p>Η πρόσβαση σε προϊόντα και αρχεία SPOT παρέχεται μέσω εμπορικών καταλόγων, όπως το Airbus OneAtlas, με όρους που εξαρτώνται από την περιοχή, την ημερομηνία και την άδεια χρήσης. Η ύπαρξη αρχειακών εικόνων δεν επιβεβαιώνει από μόνη της ότι διατίθενται νέες λήψεις από τον δορυφόρο.</p></div></article>
         </div>
