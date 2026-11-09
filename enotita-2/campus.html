@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="el">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Εξερεύνηση του οδικού δικτύου του campus και εύρεση συντομότερης διαδρομής.">
+  <title>Διαδρομές campus | Εργαστήριο 507</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@10.6.1/ol.css">
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #172b2b;
+      --muted: #536967;
+      --paper: #f1f4ee;
+      --white: #fbfcf8;
+      --line: #d4ddd4;
+      --green: #1b6658;
+      --lime: #d9ee82;
+      --orange: #e66d45;
+      --sans: "DM Sans", sans-serif;
+      --display: "Space Grotesk", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font: 15px/1.55 var(--sans); }
+    .wrap { width: min(1280px, calc(100% - 48px)); margin-inline: auto; }
+    .topbar { min-height: 72px; display: flex; align-items: center; justify-content: space-between; gap: 20px; border-bottom: 1px solid var(--line); }
+    .brand { display: flex; align-items: center; gap: 10px; color: var(--ink); text-decoration: none; font: 700 14px var(--display); }
+    .brand-mark { width: 30px; aspect-ratio: 1; display: grid; place-items: center; border-radius: 4px; background: var(--green); color: var(--lime); }
+    .header-meta, .eyebrow, .table-heading span { color: var(--muted); font: 700 10px var(--display); text-transform: uppercase; }
+    main { padding-block: 36px 64px; }
+    .page-heading { display: flex; align-items: end; justify-content: space-between; gap: 28px; margin-bottom: 22px; }
+    .eyebrow { display: block; color: var(--green); }
+    h1 { margin: 7px 0 0; font: 500 36px/1.12 var(--display); letter-spacing: 0; }
+    .heading-note { margin: 0 0 3px; color: var(--muted); font-size: 13px; }
+    .route-controls { display: grid; grid-template-columns: auto minmax(160px, 220px) auto minmax(160px, 220px) minmax(260px, 1fr); align-items: center; gap: 12px; padding: 16px 18px; border-block: 1px solid var(--line); background: var(--white); }
+    .route-controls label { font: 700 11px var(--display); }
+    select { width: 100%; min-height: 42px; padding: 0 34px 0 12px; border: 1px solid #bdcbc1; border-radius: 3px; background: #fff; color: var(--ink); font: 600 14px var(--sans); }
+    select:focus-visible { outline: 3px solid rgba(230,109,69,.35); outline-offset: 2px; }
+    .route-result { min-width: 0; padding-left: 16px; border-left: 1px solid var(--line); }
+    .route-result strong { display: block; color: var(--green); font: 600 14px var(--display); }
+    .route-result span { display: block; color: var(--muted); font-size: 12px; overflow-wrap: anywhere; }
+    .map-frame { margin: 18px 0 0; border: 1px solid var(--line); background: #e8eee7; }
+    #map { width: 100%; height: min(68vh, 700px); min-height: 500px; }
+    .map-caption { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 10px 15px; border-top: 1px solid var(--line); background: var(--white); }
+    .legend { display: flex; flex-wrap: wrap; gap: 16px; color: var(--muted); font-size: 11px; }
+    .legend-item { display: inline-flex; align-items: center; gap: 7px; }
+    .swatch { width: 18px; height: 3px; background: var(--green); }
+    .swatch.one-way { background: var(--orange); }
+    .swatch.route { height: 5px; background: #176f96; }
+    .swatch.building { width: 14px; height: 11px; border: 1px solid #8e9d76; background: #dce5c5; }
+    .map-caption small { color: var(--muted); font-size: 11px; }
+    .data-tables { display: grid; grid-template-columns: .85fr 1.15fr; gap: 36px; margin-top: 36px; }
+    .table-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--line); }
+    h2 { margin: 0; font: 600 18px var(--display); }
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 12px; }
+    th { padding: 9px 10px; color: var(--muted); font: 700 10px var(--display); text-transform: uppercase; white-space: nowrap; }
+    td { padding: 9px 10px; border-top: 1px solid var(--line); white-space: nowrap; }
+    tbody tr:nth-child(even) { background: rgba(251,252,248,.58); }
+    .node-label, .edge-code { color: var(--green); font-weight: 700; }
+    .direction { color: var(--muted); }
+    .ol-zoom { top: 12px; left: 12px; }
+    .ol-control button { background: var(--green); }
+    .ol-control button:hover { background: #124a40; }
+    .ol-attribution { display: none; }
+    @media (max-width: 900px) {
+      .route-controls { grid-template-columns: auto minmax(130px, 1fr) auto minmax(130px, 1fr); }
+      .route-result { grid-column: 1 / -1; padding: 12px 0 0; border-left: 0; border-top: 1px solid var(--line); }
+      .data-tables { grid-template-columns: 1fr; gap: 28px; }
+    }
+    @media (max-width: 600px) {
+      .wrap { width: min(100% - 28px, 520px); }
+      .topbar { min-height: 62px; }
+      .header-meta { font-size: 9px; }
+      main { padding-block: 27px 44px; }
+      .page-heading { display: block; }
+      h1 { font-size: 31px; }
+      .heading-note { margin-top: 10px; }
+      .route-controls { grid-template-columns: 40px minmax(0, 1fr); gap: 9px 10px; padding: 14px 12px; }
+      .route-result { grid-column: 1 / -1; }
+      #map { height: 58vh; min-height: 410px; }
+      .map-caption { align-items: flex-start; flex-direction: column; }
+      .legend { gap: 8px 13px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar wrap">
+    <a class="brand" href="../index.html" aria-label="Εργαστήριο 507, αρχική σελίδα">
+      <span class="brand-mark">507</span>
+      <span>Εργαστήριο 507</span>
+    </a>
+    <span class="header-meta">Ενότητα 2 · Οδικό δίκτυο campus</span>
+  </header>
+
+  <main class="wrap">
+    <div class="page-heading">
+      <div>
+        <span class="eyebrow">Γράφος και συντομότερη διαδρομή</span>
+        <h1>Επέλεξε διαδρομή</h1>
+      </div>
+      <p class="heading-note">Κόμβοι με ανοχή σύνδεσης 0,5 m</p>
+    </div>
+
+    <section class="route-controls" aria-label="Επιλογή διαδρομής">
+      <label for="from-node">Από</label>
+      <select id="from-node" aria-label="Κόμβος αφετηρίας"></select>
+      <label for="to-node">Προς</label>
+      <select id="to-node" aria-label="Κόμβος προορισμού"></select>
+      <div class="route-result" id="route-result" aria-live="polite">
+        <strong id="route-summary">Υπολογισμός διαδρομής</strong>
+        <span id="route-details"></span>
+      </div>
+    </section>
+
+    <figure class="map-frame">
+      <div id="map" role="application" aria-label="Χάρτης δρόμων, κτηρίων, κόμβων και επιλεγμένης διαδρομής"></div>
+      <figcaption class="map-caption">
+        <div class="legend" aria-label="Υπόμνημα χάρτη">
+          <span class="legend-item"><i class="swatch building"></i>Κτήρια</span>
+          <span class="legend-item"><i class="swatch"></i>Δρόμοι</span>
+          <span class="legend-item"><i class="swatch one-way"></i>Μονόδρομος</span>
+          <span class="legend-item"><i class="swatch route"></i>Διαδρομή</span>
+        </div>
+        <small>ΕΓΣΑ87 · επίπεδες συντεταγμένες σε μέτρα</small>
+      </figcaption>
+    </figure>
+
+    <div class="data-tables">
+      <section aria-labelledby="nodes-heading">
+        <div class="table-heading">
+          <h2 id="nodes-heading">Κόμβοι</h2>
+          <span id="node-count"></span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Γράμμα</th><th>X</th><th>Y</th><th>Ακμές που ξεκινούν</th></tr></thead>
+            <tbody id="node-rows"></tbody>
+          </table>
+        </div>
+      </section>
+      <section aria-labelledby="edges-heading">
+        <div class="table-heading">
+          <h2 id="edges-heading">Ακμές</h2>
+          <span id="edge-count"></span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Κωδικός</th><th>Οδός</th><th>Από</th><th>Προς</th><th>Μήκος</th><th>Μονόδρομος</th></tr></thead>
+            <tbody id="edge-rows"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/ol@10.6.1/dist/ol.js"></script>
+  <script src="campus.js"></script>
+  <script src="campus-page.js"></script>
+</body>
+</html>
